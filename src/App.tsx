@@ -21,15 +21,27 @@ export const App: React.FC = () => {
   const [sortType, setSortType] = useState<SortType>(SortType.None);
   const [isReversed, setIsReversed] = useState(false);
 
+  const getButtonClass = (base: string, isActive: boolean) =>
+    `button ${base}${isActive ? ' is-selected' : ' is-light'}`;
+
+  const handleReverse = () => {
+    setIsReversed(prev => !prev);
+  };
+
+  const handleSortAlphabetically = () => {
+    setSortType(SortType.Alphabetical);
+  };
+
+  const handleSortByLength = () => {
+    setSortType(SortType.Length);
+  };
+
   const handleReset = () => {
     setSortType(SortType.None);
     setIsReversed(false);
   };
 
-  const buttonClass = (base: string, active: boolean) =>
-    `button ${base}${active ? ' is-selected' : ' is-light'}`;
-
-  const visibleGoods = [...goodsFromServer];
+  let visibleGoods = [...goodsFromServer];
 
   if (sortType === SortType.Alphabetical) {
     visibleGoods.sort((a, b) => a.localeCompare(b));
@@ -50,24 +62,30 @@ export const App: React.FC = () => {
       <div className="buttons is-centered">
         <button
           type="button"
-          className={buttonClass('is-info', sortType === SortType.Alphabetical)}
-          onClick={() => setSortType(SortType.Alphabetical)}
+          className={getButtonClass(
+            'is-info',
+            sortType === SortType.Alphabetical,
+          )}
+          onClick={handleSortAlphabetically}
         >
           Sort alphabetically
         </button>
 
         <button
           type="button"
-          className={buttonClass('is-success', sortType === SortType.Length)}
-          onClick={() => setSortType(SortType.Length)}
+          className={getButtonClass(
+            'is-success',
+            sortType === SortType.Length,
+          )}
+          onClick={handleSortByLength}
         >
           Sort by length
         </button>
 
         <button
           type="button"
-          className={buttonClass('is-warning', isReversed)}
-          onClick={() => setIsReversed(prev => !prev)}
+          className={getButtonClass('is-warning', isReversed)}
+          onClick={handleReverse}
         >
           Reverse
         </button>
